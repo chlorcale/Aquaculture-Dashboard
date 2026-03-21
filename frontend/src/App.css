@@ -1,0 +1,104 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* Container chính */
+.app-container {
+  padding: 30px;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+  transition: all 0.3s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Chế độ khẩn cấp (Stress Test) */
+.critical-mode {
+  animation: micro-shake 0.1s infinite;
+}
+
+.critical-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(255, 0, 0, 0.15);
+  z-index: 9999;
+  pointer-events: none;
+  border: 15px solid red;
+  animation: blink-border 0.5s infinite;
+}
+
+/* Bảng điều khiển giả lập */
+.test-panel {
+  background-color: #fff7e6;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #ffa940;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.test-panel h4 {
+  margin: 0;
+  color: #d46b08;
+}
+
+/* Bố cục Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 20px;
+}
+
+.column-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Các hiệu ứng Animation */
+@keyframes blink-border {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+@keyframes micro-shake {
+  0% { transform: translate(1px, 1px); }
+  50% { transform: translate(-1px, -1px); }
+  100% { transform: translate(1px, -1px); }
+}
