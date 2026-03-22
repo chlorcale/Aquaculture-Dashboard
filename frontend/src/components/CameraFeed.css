@@ -1,0 +1,153 @@
+.camera-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Đổi từ 80% sang 100% để tuân thủ flex của App.js */
+  padding: 15px; /* Giảm nhẹ padding để lấy chỗ cho video */
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  min-height: 0; /* Quan trọng: Cho phép card co lại nhỏ hơn nội dung */
+}
+
+.camera-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-camera { color: #94a3b8; }
+.panel-title { margin: 0; font-size: 0.9rem; color: #f8fafc; font-weight: 700; }
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.live-text { color: #ef4444; font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; }
+
+/* HIỆU ỨNG VIDEO */
+/* FIX VIDEO CONTAINER: TỰ CO DÃN */
+.video-container {
+  position: relative;
+  flex: 1; /* Chiếm tối đa diện tích còn lại trong card */
+  min-height: 0; /* Ép không được tràn */
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  margin-bottom: 10px;
+}
+
+.pond-video {
+  width: 100%;
+  height: 100%; /* Đổi từ 300px sang 100% */
+  object-fit: cover; /* Đảm bảo video luôn lấp đầy khung hình */
+  display: block;
+}
+
+/* AI SCANNER LINE */
+.ai-scanner {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 2px;
+  background: linear-gradient(to right, transparent, #3b82f6, transparent);
+  z-index: 2;
+  animation: scan 3s linear infinite;
+  box-shadow: 0 0 15px #3b82f6;
+}
+
+@keyframes scan {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+.video-overlay-text {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 10px;
+  color: #3b82f6;
+  font-family: monospace;
+  z-index: 2;
+  text-shadow: 0 0 5px #000;
+}
+
+/* AI ANALYSIS BOX */
+.ai-analysis-box {
+  background: rgba(15, 23, 42, 0.5);
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(114, 46, 209, 0.2);
+}
+
+.ai-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.icon-brain { color: #a855f7; }
+.ai-header h4 { margin: 0; color: #a855f7; font-size: 0.9rem; text-transform: uppercase; }
+
+.analysis-grid { display: grid; gap: 8px; }
+.analysis-item { display: flex; justify-content: space-between; font-size: 0.85rem; }
+.label { color: #94a3b8; }
+.value { color: #f8fafc; font-weight: 700; }
+
+.status-good { color: #22c55e; }
+
+.ai-progress-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, #a855f7, #3b82f6);
+  animation: loading 2s ease-in-out infinite alternate;
+}
+
+@keyframes loading {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+/* Khung định vị 4 góc video */
+.focus-corners {
+  position: absolute;
+  inset: 15px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.corner {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border: 2px solid #3b82f6;
+  opacity: 0.7;
+}
+
+.top-left { top: 0; left: 0; border-right: none; border-bottom: none; }
+.top-right { top: 0; right: 0; border-left: none; border-bottom: none; }
+.bottom-left { bottom: 0; left: 0; border-right: none; border-top: none; }
+.bottom-right { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+/* Trạng thái sức khỏe */
+.status-good { color: #22c55e !important; }
+.status-warning { color: #facc15 !important; }
+.status-danger { color: #ef4444 !important; }

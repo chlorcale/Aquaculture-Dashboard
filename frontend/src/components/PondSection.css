@@ -1,0 +1,267 @@
+:root {
+  --water-main: #3b82f6;
+  --water-deep: #1d4ed8;
+  --water-hot-main: #ef4444;
+  --water-hot-deep: #b91c1c;
+  --water-low-main: #a16207; /* Màu nâu đất khi nước cạn */
+  --water-low-deep: #713f12;
+}
+
+.pond-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  transition: background 0.5s ease;
+}
+
+.pond-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.status-group { display: flex; align-items: center; gap: 10px; }
+.icon-alert { color: #facc15; animation: pulse-warn 1s infinite; }
+
+/* CONTAINER MÔ PHỎNG */
+.pond-visual-container {
+  display: flex;
+  gap: 15px;
+  height: 220px;
+  position: relative;
+}
+
+/* THƯỚC ĐO CÔNG NGHỆ CAO */
+.depth-ruler-v3 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #64748b;
+  padding: 5px 0;
+  border-right: 1px dashed rgba(255,255,255,0.15);
+  padding-right: 10px;
+  font-family: monospace;
+}
+
+.depth-ruler-v3 .mark:nth-child(2) { color: #94a3b8; }
+.depth-ruler-v3 .mark:last-child { color: var(--accent-color); font-weight: bold; }
+
+/* BỂ CHỨA HỆ SINH THÁI */
+.water-tank-v3 {
+  flex: 1;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(5px);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* 1. HIỆU ỨNG ÁNH SÁNG LOANG (CAUSTICS) */
+.water-caustics {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(255, 255, 255, 0.04) 11px,
+    rgba(255, 255, 255, 0.04) 20px
+  );
+  z-index: 10;
+  opacity: 0.8;
+  animation: caustics-move 8s linear infinite;
+  filter: blur(1px);
+}
+
+@keyframes caustics-move {
+  0% { transform: scale(1.1) translateX(-10%); }
+  50% { transform: scale(1.0) translateX(10%); }
+  100% { transform: scale(1.1) translateX(-10%); }
+}
+
+/* 2. HIỆU ỨNG SÓNG NƯỚC 3 LỚP (TRIPLE WAVES) */
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: -50%;
+  width: 200%;
+  border-top-left-radius: 38%;
+  border-top-right-radius: 38%;
+  transition: height 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.wave-v3-front {
+  background: linear-gradient(to top, rgba(37, 99, 235, 0.7), rgba(59, 130, 246, 0.4));
+  z-index: 6;
+  animation: wave-move 5s linear infinite;
+  border-top: 2px solid rgba(255,255,255,0.4);
+}
+
+.wave-v3-mid {
+  background: rgba(29, 78, 216, 0.3);
+  z-index: 5;
+  animation: wave-move 7s linear infinite reverse;
+  filter: blur(1px);
+  top: -10px;
+}
+
+.wave-v3-back {
+  background: rgba(23, 37, 84, 0.2);
+  z-index: 4;
+  animation: wave-move 10s linear infinite;
+  filter: blur(2px);
+  top: -20px;
+}
+
+/* 3. HIỆU ỨNG MỰC NƯỚC CẠN (DYNAMIC TURBIDITY) */
+.low-water .wave-v3-front {
+  background: linear-gradient(to top, rgba(161, 98, 7, 0.8), rgba(161, 98, 7, 0.5));
+  border-top-color: rgba(255,255,255,0.3);
+}
+.low-water .wave-v3-mid, .low-water .wave-v3-back { background: rgba(113, 63, 18, 0.4); }
+.low-water .depth-badge { background: rgba(161, 98, 7, 0.2); color: #facc15; }
+
+/* 4. HIỆU ỨNG NƯỚC NÓNG */
+.hot-water .wave-v3-front {
+  background: linear-gradient(to top, rgba(220, 38, 38, 0.7), rgba(239, 68, 68, 0.4));
+  border-top-color: rgba(255,255,255,0.5);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+.hot-water .depth-badge { background: rgba(220, 38, 38, 0.2); color: #ef4444; }
+
+/* ĐÁY AO & HỆ THỰC VẬT */
+.pond-floor-v3 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25px;
+  z-index: 8;
+}
+
+.pond-bed-mud {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 15px;
+  background: #3f2e20;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.pond-flora {
+  position: absolute;
+  bottom: 12px;
+  left: 10%;
+  right: 10%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 7;
+}
+
+.algae-emoji {
+  font-size: 1rem;
+  animation: sway 4s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+.algae-emoji.shadow { opacity: 0.3; filter: blur(1.5px); transform: translateY(2px) scaleY(0.8); }
+
+@keyframes sway {
+  from { transform: rotate(-8deg) scaleY(1.0); }
+  to { transform: rotate(8deg) scaleY(0.95); }
+}
+
+/* 5. HIỆU ỨNG TÔM THEO ĐÀN (PHYSICAL-BASED) */
+.shrimp-population {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 7;
+  transition: bottom 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.shrimp-emoji-v3 {
+  position: absolute;
+  font-size: 1.2rem;
+  animation: swim-random 6s ease-in-out infinite;
+}
+
+@keyframes swim-random {
+  0%, 100% { transform: translateY(0) translateX(0) rotate(0); }
+  25% { transform: translateY(-15px) translateX(20px) rotate(10deg) scaleX(-1); }
+  50% { transform: translateY(-5px) translateX(-15px) rotate(-10deg) scaleX(1); }
+  75% { transform: translateY(-20px) translateX(10px) rotate(5deg) scaleX(-1); }
+}
+
+/* 6. BÓNG KHÍ SỦI (BUBBLES) */
+.bubbles-container {
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 100%;
+  z-index: 6;
+}
+
+.bubble-v3 {
+  position: absolute;
+  bottom: -10px;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: bubble-rise 4s infinite;
+  opacity: 0;
+}
+
+.bubble-v3:nth-child(1) { left: 10%; animation-delay: 1s; width: 3px; height: 3px; }
+.bubble-v3:nth-child(2) { left: 50%; animation-delay: 2.5s; width: 6px; height: 6px; }
+.bubble-v3:nth-child(3) { left: 80%; animation-delay: 0.2s; width: 4px; height: 4px; }
+
+@keyframes bubble-rise {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-200px) scale(1.5); opacity: 0; }
+}
+
+/* KEYFRAMES GỐC */
+@keyframes wave-move {
+  0% { transform: translateX(0) scaleY(1); }
+  50% { transform: translateX(20%) scaleY(0.97); }
+  100% { transform: translateX(0) scaleY(1); }
+}
+
+@keyframes pulse-warn {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.pond-footer-v3 {
+  margin-top: 15px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  text-align: center;
+}
+/* Thêm vào CSS */
+.water-tank-v3::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+  z-index: 9; /* Nằm dưới caustics nhưng trên sóng */
+  transition: background 0.8s ease;
+}
+
+.low-water .water-tank-v3::after {
+  background: rgba(161, 98, 7, 0.15); /* Tạo độ đục khi nước cạn */
+}
+
+.hot-water .water-tank-v3::after {
+  background: rgba(220, 38, 38, 0.05); /* Tạo ánh đỏ khi nước nóng */
+}
