@@ -1,0 +1,109 @@
+.chart-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Quan trọng cho layout 1:2:1 */
+  padding: 15px;
+}
+
+.chart-header {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-activity { color: var(--accent-blue); }
+
+/* BỘ LỌC (CONTROLS) */
+.chart-controls {
+  display: flex;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 3px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.filter-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  padding: 6px 2px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column; /* Icon trên, chữ dưới để tiết kiệm chiều ngang */
+  align-items: center;
+  gap: 3px;
+  transition: 0.3s;
+  text-transform: uppercase;
+}
+
+.filter-btn.active {
+  background: var(--accent-blue);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.filter-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+}
+
+/* VÙNG BIỂU ĐỒ CHÍNH */
+.chart-main-container {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.loading-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+/* Tinh chỉnh Legend của Recharts */
+.recharts-legend-item-text {
+  color: #94a3b8 !important;
+  font-size: 10px !important;
+  font-weight: 600;
+}
+
+/* Ẩn các lưới dọc để đỡ rối mắt khi cột 1 hẹp */
+.recharts-cartesian-grid-vertical {
+  display: none;
+}
+
+/* Custom Tooltip */
+.recharts-tooltip-label {
+  margin-bottom: 5px;
+  color: var(--accent-orange);
+  font-weight: 800;
+}
+
+/* Tùy chỉnh nhãn của ReferenceLine */
+.recharts-reference-line-label {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+/* Hiệu ứng mờ dần cho đường gạch ngang để không đè dữ liệu chính */
+.recharts-reference-line-line {
+  stroke-width: 1.5;
+  opacity: 0.5;
+}

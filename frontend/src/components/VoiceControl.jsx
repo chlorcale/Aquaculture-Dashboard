@@ -1,89 +1,129 @@
-import React, { useState, useEffect } from 'react';
-import { Mic, MicOff, Terminal as TerminalIcon } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Mic, MicOff, Terminal as TerminalIcon, Cpu, Trash2 } from 'lucide-react';
+import './VoiceControl.css';
 
 const VoiceControl = () => {
   const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState('');
   const [terminalLogs, setTerminalLogs] = useState(["--- Hệ thống Voice AI sẵn sàng ---"]);
+  const scrollRef = useRef(null); // Ref để xử lý tự động cuộn
+
+  // Tự động cuộn xuống dưới cùng khi có Log mới
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [terminalLogs, isListening]);
 
   // Khởi tạo nhận diện giọng nói
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = new window.SpeechRecognition();
-
-  recognition.continuous = false; // Nghe từng câu một
-  recognition.lang = 'vi-VN';    // Nhận diện tiếng Việt
-  recognition.interimResults = false;
+  const setupRecognition = useCallback(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Trình duyệt không hỗ trợ nhận diện giọng nói.");
+      return null;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'vi-VN';
+    recognition.interimResults = false;
+    return recognition;
+  }, []);
 
   const startListening = () => {
-    setIsListening(true);
+    const recognition = setupRecognition();
+    if (!recognition) return;
+
+    recognition.onstart = () => setIsListening(true);
+    
+    recognition.onresult = (event) => {
+      const text = event.results[0][0].transcript;
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      
+      const userLog = `[${time}] User: "${text}"`;
+      
+      // Logic xử lý lệnh
+      let aiResponse = "Hệ thống đã nhận lệnh.";
+      const cmd = text.toLowerCase();
+      if (cmd.includes("tắt báo động")) aiResponse = "Đã tắt chuông cảnh báo khẩn cấp.";
+      if (cmd.includes("kiểm tra ao")) aiResponse = "Cảm biến ổn định. Mực nước: 102cm.";
+      if (cmd.includes("nhiệt độ")) aiResponse = "Nhiệt độ hiện tại là 27.2 độ C.";
+
+      const aiLog = `[${time}] AI: ${aiResponse}`;
+
+      // FIX: Đẩy log mới vào CUỐI mảng để không bị ngược
+      setTerminalLogs(prev => [...prev, userLog, aiLog].slice(-20)); // Giữ 20 dòng gần nhất
+      setIsListening(false);
+    };
+
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
     recognition.start();
   };
 
-  recognition.onresult = (event) => {
-    const last = event.results.length - 1;
-    const text = event.results[last][0].transcript;
-    
-    setTranscript(text);
-    // Thêm log vào Terminal giả lập
-    const newLog = `[${new Date().toLocaleTimeString()}] User: "${text}"`;
-    setTerminalLogs(prev => [newLog, ...prev].slice(0, 5)); // Lưu 5 dòng gần nhất
-    
-    setIsListening(false);
-  };
-
-  recognition.onerror = (event) => {
-    console.error("Lỗi Voice:", event.error);
-    setIsListening(false);
-  };
-
-  recognition.onend = () => {
-    setIsListening(false);
-  };
+  const clearLogs = () => setTerminalLogs(["--- Đã xóa lịch sử log ---"]);
 
   return (
-    <div style={{ backgroundColor: 'white', padding: '25px', borderRadius: '15px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', height: '100%' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
-        <Mic color={isListening ? "red" : "#888"} className={isListening ? "pulse-dot" : ""} />
-        <h3 style={{ margin: 0 }}>Điều Khiển Giọng Nói (AI)</h3>
+    <div className={`voice-card glass-panel ${isListening ? 'listening' : ''}`}>
+      <div className="voice-header">
+        <div className="title-group">
+          <Cpu className="icon-cpu" size={18} />
+          <h3 className="panel-title">Voice AI Command</h3>
+        </div>
+        <div className="voice-actions">
+          <button className="btn-clear" onClick={clearLogs} title="Xóa log">
+            <Trash2 size={14} />
+          </button>
+          <div className="status-indicator">
+            {isListening ? <span className="recording-tag">REC</span> : <span className="idle-tag">IDLE</span>}
+          </div>
+        </div>
+      </div>
+
+      <div className="voice-visualizer">
+        {isListening ? (
+          <div className="sound-waves">
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </div>
+        ) : (
+          <div className="mic-placeholder">
+            <MicOff size={32} className="icon-muted" />
+          </div>
+        )}
       </div>
 
       <button 
+        className={`btn-voice ${isListening ? 'btn-active' : ''}`}
         onClick={startListening}
         disabled={isListening}
-        style={{
-          width: '100%',
-          padding: '12px',
-          backgroundColor: isListening ? '#ff4d4f' : '#1890ff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          fontWeight: 'bold',
-          marginBottom: '15px'
-        }}
       >
-        {isListening ? "Đang lắng nghe..." : "Nhấn để ra lệnh"}
+        {isListening ? (
+          <><Mic className="animate-pulse" size={16} /> Đang nghe...</>
+        ) : (
+          <><Mic size={16} /> Nhấn để ra lệnh</>
+        )}
       </button>
 
-      {/* TERMINAL GIẢ LẬP ĐỂ CHỨNG MINH MODULE HOẠT ĐỘNG */}
-      <div style={{ 
-        backgroundColor: '#1e1e1e', 
-        color: '#00ff00', 
-        padding: '15px', 
-        borderRadius: '8px', 
-        fontFamily: 'Courier New, monospace',
-        fontSize: '13px',
-        minHeight: '120px'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '10px', borderBottom: '1px solid #444' }}>
-          <TerminalIcon size={14} /> <span>VOICE_TERMINAL</span>
+      {/* TERMINAL FIX LỖI TRÀN VIỀN */}
+      <div className="terminal-container">
+        <div className="terminal-header">
+          <TerminalIcon size={12} /> <span>TERMINAL_V3.0</span>
         </div>
-        {terminalLogs.map((log, i) => (
-          <div key={i} style={{ marginBottom: '5px', opacity: i === 0 ? 1 : 0.6 }}>
-            {log}
-          </div>
-        ))}
-        {isListening && <span className="blink-cursor">_</span>}
+        <div className="terminal-body" ref={scrollRef}>
+          {terminalLogs.map((log, i) => (
+            <div key={i} className={`log-line ${log.includes('AI:') ? 'ai-text' : ''}`}>
+              <span className="log-prompt">{">"}</span> {log}
+            </div>
+          ))}
+          {isListening && (
+            <div className="log-line">
+              <span className="log-prompt">{">"}</span>
+              <span className="cursor">_</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

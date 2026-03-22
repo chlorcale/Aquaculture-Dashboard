@@ -1,0 +1,94 @@
+.voice-card {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  height: 100%;
+  min-height: 0; /* Ép card không tự dãn ra ngoài flex của App */
+}
+
+.voice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.voice-actions { display: flex; align-items: center; gap: 10px; }
+.btn-clear { background: transparent; border: none; color: #64748b; cursor: pointer; transition: 0.3s; }
+.btn-clear:hover { color: #ef4444; }
+
+.recording-tag { color: #ef4444; font-size: 9px; font-weight: 900; letter-spacing: 1px; }
+.idle-tag { color: #64748b; font-size: 9px; font-weight: 900; }
+
+/* VISUALIZER */
+.voice-visualizer {
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.sound-waves { display: flex; align-items: center; gap: 3px; height: 30px; }
+.sound-waves .bar {
+  width: 3px; height: 100%; background: #a855f7; border-radius: 3px;
+  animation: wave-bounce 0.8s ease-in-out infinite;
+}
+.bar:nth-child(2) { animation-delay: 0.1s; }
+.bar:nth-child(3) { animation-delay: 0.2s; height: 140%; }
+.bar:nth-child(4) { animation-delay: 0.15s; }
+@keyframes wave-bounce { 0%, 100% { transform: scaleY(0.4); } 50% { transform: scaleY(1.2); } }
+
+/* BUTTON */
+.btn-voice {
+  width: 100%; padding: 12px; border-radius: 8px; border: none;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white; font-weight: 700; font-size: 0.8rem;
+  display: flex; justify-content: center; align-items: center; gap: 8px;
+  cursor: pointer; transition: 0.3s; margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+.btn-active { background: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+
+/* --- TERMINAL (PHẦN FIX CHÍNH) --- */
+.terminal-container {
+  background: #000;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  flex: 1;           /* Tự động lấy hết diện tích còn lại */
+  min-height: 0;     /* Ép không được tràn viền cha */
+  overflow: hidden;
+}
+
+.terminal-header {
+  font-size: 9px; color: #a855f7; border-bottom: 1px solid #222;
+  margin-bottom: 6px; display: flex; align-items: center; gap: 5px;
+  padding-bottom: 4px; flex-shrink: 0;
+}
+
+.terminal-body {
+  flex: 1;
+  overflow-y: auto;  /* Cho phép cuộn dọc bên trong */
+  min-height: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+
+/* Tùy chỉnh thanh cuộn đẹp */
+.terminal-body::-webkit-scrollbar { width: 3px; }
+.terminal-body::-webkit-scrollbar-track { background: transparent; }
+.terminal-body::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+.log-line { margin-bottom: 3px; color: #4ade80; opacity: 0.9; word-break: break-all; }
+.log-line.ai-text { color: #3b82f6; font-weight: 600; }
+.log-prompt { color: #a855f7; margin-right: 4px; }
+
+.cursor { color: #4ade80; animation: blink 1s infinite; }
+@keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }

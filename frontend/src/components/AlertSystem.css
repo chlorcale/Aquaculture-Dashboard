@@ -1,0 +1,123 @@
+.alert-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  transition: all 0.3s ease;
+  border-left: 4px solid #22c55e;
+}
+
+.alert-card.has-alerts {
+  border-left-color: #ef4444;
+  background: rgba(220, 38, 38, 0.1);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.status-tag {
+  font-size: 10px;
+  font-weight: 900;
+  padding: 4px 10px;
+  border-radius: 12px;
+  letter-spacing: 1px;
+}
+
+.tag-safe { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+.tag-error { 
+  background: #ef4444; 
+  color: white; 
+  animation: pulse-red 1s infinite;
+}
+
+/* DANH SÁCH CẢNH BÁO */
+.alert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.alert-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.safe-item {
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.error-item {
+  background: rgba(220, 38, 38, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  animation: slideIn 0.3s ease-out;
+}
+
+/* ANIMATIONS */
+.shaking-bell {
+  color: #ef4444;
+  animation: shake-bell 0.5s infinite;
+}
+
+@keyframes shake-bell {
+  0% { transform: rotate(0); }
+  25% { transform: rotate(20deg); }
+  75% { transform: rotate(-20deg); }
+  100% { transform: rotate(0); }
+}
+
+@keyframes pulse-red {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* FOOTER CỦA ALERT */
+.alert-footer {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-note {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #ef4444;
+  text-align: center;
+  margin: 0;
+}
+
+.emergency-scanner {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #ef4444, transparent);
+  animation: scan-footer 2s linear infinite;
+}
+
+@keyframes scan-footer {
+  to { left: 100%; }
+}
